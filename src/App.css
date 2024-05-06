@@ -1,0 +1,19 @@
+.loading {
+  width: 150px;
+  height: 150px;
+  border-top: 8px solid #f5f5f5;
+  border-right: 8px solid #f5f5f5;
+  border-bottom: 8px solid #f5f5f5;
+  border-left: 8px solid transparent;
+  border-radius: 50%;
+  margin-inline: auto;
+  animation: 3s linear infinite rotation;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
