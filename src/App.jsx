@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
-import Card from './components/Card/Card.jsx';
-import Navbar from './components/Navbar/Navbar.jsx';
+import ReactPaginate from 'react-paginate';
 import { getAllPokemon, getPokemon } from './utils/pokemon.js';
+import Navbar from './components/Navbar/Navbar.jsx';
+import Card from './components/Card/Card.jsx';
+
 import './App.css';
 
 function App() {
-  const initialURL = 'https://pokeapi.co/api/v2/pokemon';
-  // const initialURL = 'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0';
+  const [items, setItems] = useState([]);
+  console.log(items);
+
+  // 総ページ数
+  const [pageCount, setpageCount] = useState(0);
+
+  // １ページあたりのポケモンの数
+  let limit = 20;
   const [loading, setLoading] = useState(true);
-  const [pokemonData, setPokemonData] = useState([]);
-  const [nextURL, setNextURL] = useState('');
-  const [prevURL, setPrevURL] = useState('');
 
   const loadPokemonDetails = async (data) => {
     // ポケモン配列から1階層目の詳細データを取得
@@ -20,8 +25,6 @@ function App() {
         return pokemonRecord;
       })
     );
-
-    console.log(_pokemonData);
 
     // ポケモン配列から2階層目の詳細データを取得
     let _pokemonDetails = await Promise.all(
@@ -36,9 +39,15 @@ function App() {
       let jaName = pokemon.names.find(
         (entry) => entry.language.name === 'ja-Hrkt'
       ).name;
-      let jaText = pokemon.flavor_text_entries.find(
-        (entry) => entry.language.name === 'ja-Hrkt'
-      ).flavor_text;
+      let jaText = '';
+      if (pokemon.flavor_text_entries) {
+        let flavorTextEntry = pokemon.flavor_text_entries.find(
+          (entry) => entry.language.name === 'ja-Hrkt'
+        );
+        if (flavorTextEntry && flavorTextEntry.flavor_text) {
+          jaText = flavorTextEntry.flavor_text;
+        }
+      }
 
       return {
         name: jaName,
@@ -100,41 +109,40 @@ function App() {
         jaabilities: pokemonAbilities[index],
       };
     });
-    setPokemonData(_pokemonDetailsData);
-    console.log(_pokemonDetailsData);
+
+    setItems(_pokemonDetailsData);
   };
 
   useEffect(() => {
-    const fetchPokemonData = async () => {
-      // 20匹のポケモン配列を取得
-      let res = await getAllPokemon(initialURL);
-      // 各ポケモンの詳細なデータを取得
+    const getComments = async () => {
+      const res = await getAllPokemon(
+        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=0`
+      );
+
+      const total = res.count;
+      setpageCount(Math.ceil(total / limit));
+
       loadPokemonDetails(res.results);
-      // 次ページ、前ページのデータを準備
-      setNextURL(res.next);
-      setPrevURL(res.previous);
       setLoading(false);
     };
-    fetchPokemonData();
-  }, []);
 
-  const handleNextPage = async () => {
-    setLoading(true);
-    let data = await getAllPokemon(nextURL);
-    await loadPokemonDetails(data.results);
-    setNextURL(data.next);
-    setPrevURL(data.previous);
-    setLoading(false);
+    getComments();
+  }, [limit]);
+
+  const fetchComments = async (offset) => {
+    // setLoading(true);
+    const res = await getAllPokemon(
+      `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
+    );
+    loadPokemonDetails(res.results);
+    // setLoading(false);
   };
 
-  const handlePrevPage = async () => {
-    if (!prevURL) return;
-    setLoading(true);
-    let data = await getAllPokemon(prevURL);
-    await loadPokemonDetails(data.results);
-    setNextURL(data.next);
-    setPrevURL(data.previous);
-    setLoading(false);
+  const handlePageClick = async (data) => {
+    console.log(data.selected);
+
+    let offset = data.selected * limit;
+    fetchComments(offset);
   };
 
   return (
@@ -146,25 +154,30 @@ function App() {
         ) : (
           <>
             <div className="pokemonCardContainer container mx-auto w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-12 pb-16 px-4">
-              {pokemonData.map((pokemon, i) => {
+              {items.map((pokemon, i) => {
                 return <Card key={i} pokemon={pokemon} />;
               })}
             </div>
             <div className="bg-glay py-12">
-              <div className="button_wrapper container mx-auto flex justify-center gap-8">
-                <button
-                  className="bg-blue text-xl py-4 px-12 rounded-full text-white hover:opacity-70 transition"
-                  onClick={handlePrevPage}
-                >
-                  前へ
-                </button>
-                <button
-                  className="bg-blue text-xl py-4 px-12 rounded-full text-white hover:opacity-70 transition"
-                  onClick={handleNextPage}
-                >
-                  次へ
-                </button>
-              </div>
+              <ReactPaginate
+                previousLabel={'previous'}
+                nextLabel={'next'}
+                breakLabel={'...'}
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={3}
+                onPageChange={handlePageClick}
+                containerClassName={'pagination'}
+                pageClassName={'page-item'}
+                pageLinkClassName={'page-link'}
+                previousClassName={'previous-item'}
+                previousLinkClassName={'previous-link'}
+                nextClassName={'next-item'}
+                nextLinkClassName={'next-link'}
+                breakClassName={'break-item'}
+                breakLinkClassName={'break-link'}
+                activeClassName={'active'}
+              />
             </div>
           </>
         )}

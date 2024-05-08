@@ -17,3 +17,43 @@
     transform: rotate(360deg);
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.page-link {
+  position: relative;
+  background-color: white;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  transition: 0.7s;
+}
+.page-link:hover {
+  box-shadow: 0 0 15px #ccc;
+}
+
+.page-link:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  border: 18px solid #f43f5e;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  opacity: 0;
+  transform: rotate(155deg);
+  transition: all 0.3s ease 0s;
+}
+.page-link:hover:before {
+  opacity: 1;
+  transform: rotate(-45deg);
+}
