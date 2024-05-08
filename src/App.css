@@ -57,3 +57,6 @@
   opacity: 1;
   transform: rotate(-45deg);
 }
+.active {
+  color: #cbcbcb;
+}
