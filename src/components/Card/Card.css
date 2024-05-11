@@ -2,6 +2,7 @@
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
+  z-index: 99999;
 }
 
 .modal-inner {
@@ -10,11 +11,11 @@
   right: 0;
   left: 0;
   width: 92%;
-  padding: 0 1rem 2rem;
-  padding: 0 1rem 2rem;
+  padding: 1rem 1rem 2rem;
   margin: auto;
   background-color: rgb(255, 255, 255);
   border-radius: 8px;
+
   @media (width > 600px) {
     width: 480px;
     padding: 0 2rem 2rem;

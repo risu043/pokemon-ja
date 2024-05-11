@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -9,9 +10,23 @@ const Navbar = () => {
           ポケモン図鑑
         </span>
       </h1>
-      <p className="text-lg font-gill tracking-wide">
+      <p className="text-lg font-gill tracking-wide mb-4">
         by <a href="https://pokeapi.co/">PokeAPI</a>
       </p>
+      <nav>
+        <ul className="nav flex justify-center gap-4">
+          <li>
+            <Link to={'/'} className="font-zenKaku">
+              いちらん
+            </Link>
+          </li>
+          <li>
+            <Link to={'/serch'} className="font-zenKaku">
+              けんさく
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };

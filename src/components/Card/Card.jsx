@@ -28,7 +28,10 @@ const Card = ({ pokemon }) => {
         <div className="modal-inner font-zenKaku">
           <div>
             <img
+              className=" w-full"
               src={pokemon.sprites.other['official-artwork'].front_default}
+              width="300ox"
+              height="300px"
               alt="{pokemon.ja}"
             />
           </div>
@@ -91,7 +94,13 @@ const Card = ({ pokemon }) => {
         onClick={handleClick}
       >
         <div>
-          <img className=" w-full" src={pokemon.sprites.front_default} alt="" />
+          <img
+            className=" w-full"
+            src={pokemon.sprites.front_default}
+            width="160ox"
+            height="160px"
+            alt="{pokemon.janame}"
+          />
         </div>
         <h3 className="font-zenKaku text-center text-2xl mb-4">
           {pokemon.janame}
