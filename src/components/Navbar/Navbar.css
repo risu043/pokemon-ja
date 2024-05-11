@@ -1,0 +1,7 @@
+.nav li a {
+  transition: 0.7s;
+}
+
+.nav li a:hover {
+  opacity: 0.5;
+}
