@@ -1,6 +1,6 @@
 // import { RouteObject } from "react-router-dom";
 import Top from '../Top.jsx';
-import SerchPage from '../Serch.jsx';
+import SearchPage from '../Search.jsx';
 import Layout from '../components/layout.jsx';
 
 // export const AppRoutes: RouteObject[] = [
@@ -10,7 +10,7 @@ export const AppRoutes = [
     element: <Layout />,
     children: [
       { index: true, element: <Top /> },
-      { path: '/serch', element: <SerchPage /> },
+      { path: '/search', element: <SearchPage /> },
     ],
   },
 ];
