@@ -21,7 +21,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to={'/serch'} className="font-zenKaku">
+            <Link to={'/search'} className="font-zenKaku">
               けんさく
             </Link>
           </li>

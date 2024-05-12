@@ -4,7 +4,6 @@ import { getAllPokemon, getPokemon } from './utils/pokemon.js';
 import Card from './components/Card/Card.jsx';
 
 import './Top.css';
-// import pokemonJson from './utils/pokemon.json';
 
 function Top() {
   const [items, setItems] = useState([]);
@@ -25,6 +24,7 @@ function Top() {
         return pokemonRecord;
       })
     );
+    // console.log(_pokemonData);
 
     // ポケモン配列から2階層目の詳細データを取得
     let _pokemonDetails = await Promise.all(
@@ -33,6 +33,8 @@ function Top() {
         return pokemonRecord;
       })
     );
+
+    // console.log(_pokemonDetails);
 
     // ポケモンの日本語プロパティを取得（名前・テキスト）
     let pokemonNamesAndText = _pokemonDetails.map((pokemon) => {
@@ -142,14 +144,6 @@ function Top() {
     let offset = data.selected * limit;
     fetchComments(offset);
   };
-
-  // const pokemonAllay = async () => {
-  //   const res = await getAllPokemon(
-  //     'https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0'
-  //   );
-  //   console.log(res.results);
-  // };
-  // pokemonAllay();
 
   return (
     <>

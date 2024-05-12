@@ -12,6 +12,7 @@ export default {
       transparent: 'transparent',
       white: '#ffffff',
       glay: '#f5f5f5',
+      darkGlay: '#cccccc',
       red: '#f43f5e',
       blue: '#60a5fa',
       black: '#262626',
