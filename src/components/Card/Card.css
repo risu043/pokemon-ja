@@ -7,17 +7,16 @@
 
 .modal-inner {
   position: absolute;
-  top: 5%;
+  top: 3%;
   right: 0;
   left: 0;
   width: 92%;
-  padding: 1rem 1rem 2rem;
+  padding: 1rem;
   margin: auto;
   background-color: rgb(255, 255, 255);
   border-radius: 8px;
 
   @media (width > 600px) {
     width: 480px;
-    padding: 0 2rem 2rem;
   }
 }

@@ -14,6 +14,7 @@ export const getPokemon = (url) => {
   });
 };
 
+// ポケモンの詳細データを日本語で取得する関数
 export const loadPokemonDetails = async (data) => {
   // ポケモン配列から1階層目の詳細データを取得
   let _pokemonData = await Promise.all(
