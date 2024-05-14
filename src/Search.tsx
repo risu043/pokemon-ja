@@ -4,7 +4,7 @@ import {
   getPokemon,
   loadPokemonDetails,
 } from './utils/pokemon.ts';
-import { Names } from './utils/type.ts';
+import { Names, PokemonPropaties } from './utils/type.ts';
 import Card from './components/Card/Card.tsx';
 
 const SerchPage = () => {
@@ -12,19 +12,21 @@ const SerchPage = () => {
   const [names, setNames] = useState<Names[]>([]);
 
   // formのinputの値
-  const [title, setTitle] = useState<string>();
+  const [title, setTitle] = useState<string>('');
 
   // 検索結果
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<PokemonPropaties[]>([]);
 
   // 検索ボタンをおしてから結果が表示されるまでloading
   const [loading, setLoading] = useState(false);
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
     e.preventDefault();
 
     if (title === '') {
@@ -34,9 +36,7 @@ const SerchPage = () => {
     setLoading(true);
 
     let translate = names.filter((pokemon) => pokemon.jaName.match(title));
-    // console.log(translate);
     let enNames = translate.map((pokemon) => pokemon.name);
-    // console.log(enNames);
 
     const res = await getAllPokemon(
       'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'
@@ -57,7 +57,7 @@ const SerchPage = () => {
   };
 
   useEffect(() => {
-    const pokemonNames = async () => {
+    const pokemonNames = async (): Promise<void> => {
       const res = await getAllPokemon(
         'https://pokeapi.co/api/v2/pokemon-species?limit=10000&offset=0'
       );
@@ -70,7 +70,7 @@ const SerchPage = () => {
       let _pokemonNames = _pokemonNameData.map((pokemon) => {
         let jaName = pokemon.names.find(
           (entry) => entry.language.name === 'ja-Hrkt'
-        ).name;
+        )!.name;
 
         return {
           name: pokemon.name,

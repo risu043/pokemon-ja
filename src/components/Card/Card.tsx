@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { CardProps } from '../../utils/type.ts';
 import './Card.css';
 
-const Card = ({ pokemon }) => {
+const Card: React.FC<CardProps> = ({ pokemon }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
@@ -32,7 +33,7 @@ const Card = ({ pokemon }) => {
               src={pokemon.image}
               width="300ox"
               height="300px"
-              alt="{pokemon.ja}"
+              alt="{pokemon.name}"
             />
           </div>
           <h3 className="font-zenKaku text-2xl mb-2 font-black">
@@ -99,7 +100,7 @@ const Card = ({ pokemon }) => {
             src={pokemon.thumbnail}
             width="160ox"
             height="160px"
-            alt="{pokemon.janame}"
+            alt="{pokemon.name}"
           />
         </div>
         <h3 className="font-zenKaku text-center text-2xl mb-4">

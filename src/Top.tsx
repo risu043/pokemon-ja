@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+// import { ReactPaginateProps } from 'react-paginate';
 import { getAllPokemon, loadPokemonDetails } from './utils/pokemon.ts';
-import { PokemonPropaties } from './utils/type.ts';
+import { PokemonResponse, PokemonPropaties } from './utils/type.ts';
 import Card from './components/Card/Card.tsx';
 import './Top.css';
 
@@ -20,11 +21,10 @@ function Top() {
 
   useEffect(() => {
     // トップページのポケモンデータを取得
-    const getTopPokemon = async () => {
-      const res = await getAllPokemon(
+    const getTopPokemon = async (): Promise<void> => {
+      const res: PokemonResponse = await getAllPokemon(
         `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=0`
       );
-      console.log(res);
 
       const total = res.count;
       setpageCount(Math.ceil(total / limit));
@@ -38,22 +38,17 @@ function Top() {
   }, [limit]);
 
   // ページネーション先のポケモンデータを取得
-  const getCurrentPokemon = async (offset: number) => {
-    const res = await getAllPokemon(
+  const getCurrentPokemon = async (offset: number): Promise<void> => {
+    const res: PokemonResponse = await getAllPokemon(
       `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
     );
-    // console.log(res.results[4]);
-    // console.log(res.results[5]);
-    // console.log(res.results[6]);
-    // console.log(res.results[7]);
     const _pokemonDetailsData = await loadPokemonDetails(res.results);
     setItems(_pokemonDetailsData);
   };
 
   // ページネーションをクリックした時の処理
-  const handlePageClick = async (data) => {
-    console.log(data.selected);
-
+  const handlePageClick = async (data: { selected: number }): Promise<void> => {
+    // console.log(data.selected);
     let offset: number = data.selected * limit;
     getCurrentPokemon(offset);
   };

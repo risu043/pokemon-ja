@@ -1,23 +1,33 @@
-import { PokemonNamesAndText, PokemonPropaties } from './type.ts';
+import {
+  PokemonResponse,
+  PokemonNamesAndText,
+  PokemonPropaties,
+  PokemonDetailsResponse,
+} from './type.ts';
 
-export const getAllPokemon = (url) => {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => resolve(data));
-  });
+export const getAllPokemon = async (url: string): Promise<PokemonResponse> => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
 };
 
-export const getPokemon = (url) => {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => resolve(data));
+export const getPokemon = async (
+  url: string
+): Promise<PokemonDetailsResponse> => {
+  return fetch(url).then((res) => {
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return res.json();
   });
 };
 
 // ポケモンの詳細データを日本語で取得する関数
-export const loadPokemonDetails = async (data) => {
+export const loadPokemonDetails = async (
+  data: { url: string }[]
+): Promise<PokemonPropaties[]> => {
   // ポケモン配列から1階層目の詳細データを取得
   let _pokemonData = await Promise.all(
     data.map((pokemon) => {
@@ -39,7 +49,7 @@ export const loadPokemonDetails = async (data) => {
     (pokemon) => {
       let jaName = pokemon.names.find(
         (entry) => entry.language.name === 'ja-Hrkt'
-      ).name;
+      )!.name;
       let jaText = '';
       if (pokemon.flavor_text_entries) {
         let flavorTextEntry = pokemon.flavor_text_entries.find(
@@ -58,20 +68,20 @@ export const loadPokemonDetails = async (data) => {
   );
 
   // タイプに関する詳細なデータを含むurlを取得
-  let pokemonTypesUrl: string[] = _pokemonData.map((pokemon) => {
+  let pokemonTypesUrl: string[][] = _pokemonData.map((pokemon) => {
     let typesURL = pokemon.types.map((type) => type.type.url);
     return typesURL;
   });
 
   // ポケモンの日本語プロパティを取得（タイプ）
-  let pokemonTypes: string[] = await Promise.all(
+  let pokemonTypes: string[][] = await Promise.all(
     pokemonTypesUrl.map(async (urlArray) => {
       let pokemonTypesData = await Promise.all(
         urlArray.map(async (url) => {
           let pokemonTypeDetail = await getPokemon(url);
           let jaName = pokemonTypeDetail.names.find(
             (name) => name.language.name === 'ja-Hrkt'
-          ).name;
+          )!.name;
           return jaName;
         })
       );
@@ -80,20 +90,20 @@ export const loadPokemonDetails = async (data) => {
   );
 
   // アビリティに関する詳細なデータを含むurlを取得
-  let pokemonAbilitiesUrl: string[] = _pokemonData.map((pokemon) => {
+  let pokemonAbilitiesUrl: string[][] = _pokemonData.map((pokemon) => {
     let abilityURL = pokemon.abilities.map((ability) => ability.ability.url);
     return abilityURL;
   });
 
   // ポケモンの日本語プロパティを取得（アビリティ）
-  let pokemonAbilities: string[] = await Promise.all(
+  let pokemonAbilities: string[][] = await Promise.all(
     pokemonAbilitiesUrl.map(async (urlArray) => {
       let pokemonAbilitiesData = await Promise.all(
         urlArray.map(async (url) => {
           let pokemonAbilityDetail = await getPokemon(url);
           let jaName = pokemonAbilityDetail.names.find(
             (name) => name.language.name === 'ja-Hrkt'
-          ).name;
+          )!.name;
           return jaName;
         })
       );
@@ -117,7 +127,6 @@ export const loadPokemonDetails = async (data) => {
       };
     }
   );
-  console.log(pokemonPropaties);
 
   return pokemonPropaties;
 };
