@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { CardProps } from '../../utils/type.ts';
 import './Card.css';
 
-const Card = ({ pokemon }) => {
+const Card: React.FC<CardProps> = ({ pokemon }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
