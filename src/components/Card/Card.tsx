@@ -29,7 +29,7 @@ const Card = ({ pokemon }) => {
           <div>
             <img
               className=" w-full"
-              src={pokemon.sprites.other['official-artwork'].front_default}
+              src={pokemon.image}
               width="300ox"
               height="300px"
               alt="{pokemon.ja}"
@@ -37,11 +37,11 @@ const Card = ({ pokemon }) => {
           </div>
           <h3 className="font-zenKaku text-2xl mb-2 font-black">
             <span className="font-gill mr-2">No.{pokemon.id}</span>
-            {pokemon.janame}
+            {pokemon.name}
           </h3>
           <div className="flex">
             <div>タイプ：</div>
-            {pokemon.jatypes.map((type) => {
+            {pokemon.types.map((type) => {
               return (
                 <div className="mr-2" key={type}>
                   {type}
@@ -70,7 +70,7 @@ const Card = ({ pokemon }) => {
             </div>
             <div className="flex flex-wrap mb-2">
               <div>のうりょく：</div>
-              {pokemon.jaabilities.map((ability) => {
+              {pokemon.abilities.map((ability) => {
                 return (
                   <div className="mr-2" key={ability}>
                     {ability}
@@ -96,14 +96,14 @@ const Card = ({ pokemon }) => {
         <div>
           <img
             className=" w-full"
-            src={pokemon.sprites.front_default}
+            src={pokemon.thumbnail}
             width="160ox"
             height="160px"
             alt="{pokemon.janame}"
           />
         </div>
         <h3 className="font-zenKaku text-center text-2xl mb-4">
-          {pokemon.janame}
+          {pokemon.name}
         </h3>
       </div>
       {modal}
