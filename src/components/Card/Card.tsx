@@ -1,4 +1,5 @@
 import React from 'react';
+import LikeButton from '../LikeButton/LikeButton.tsx';
 import { useState, useEffect } from 'react';
 import { CardProps } from '../../utils/type.ts';
 import './Card.css';
@@ -25,8 +26,14 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
   let modal;
   if (isModalOpen) {
     modal = (
-      <div className="modal" onClick={handleClickClose}>
-        <div className="modal-inner font-zenKaku">
+      <div className="overlay" onClick={handleClickClose}>
+        <div
+          className="modal font-zenKaku"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button className="close-button" onClick={handleClickClose}>
+            ×
+          </button>
           <div>
             <img
               className=" w-full"
@@ -36,10 +43,13 @@ const Card: React.FC<CardProps> = ({ pokemon }) => {
               alt="{pokemon.name}"
             />
           </div>
-          <h3 className="font-zenKaku text-2xl mb-2 font-black">
-            <span className="font-gill mr-2">No.{pokemon.id}</span>
-            {pokemon.name}
-          </h3>
+          <div className="flex name-like-wrapper">
+            <h3 className="font-zenKaku text-2xl mb-2 font-black">
+              <span className="font-gill mr-2">No.{pokemon.id}</span>
+              {pokemon.name}
+            </h3>
+            <LikeButton pokemon={pokemon} />
+          </div>
           <div className="flex">
             <div>タイプ：</div>
             {pokemon.types.map((type) => {

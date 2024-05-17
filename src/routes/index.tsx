@@ -1,6 +1,7 @@
 import { RouteObject } from 'react-router-dom';
 import Top from '../Top.tsx';
 import SearchPage from '../Search.tsx';
+import LikedPokemonPage from '../Like.tsx';
 import Layout from '../components/layout.tsx';
 
 export const AppRoutes: RouteObject[] = [
@@ -10,6 +11,7 @@ export const AppRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Top /> },
       { path: '/search', element: <SearchPage /> },
+      { path: '/like', element: <LikedPokemonPage /> },
     ],
   },
 ];

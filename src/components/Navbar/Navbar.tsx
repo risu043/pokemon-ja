@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
@@ -23,6 +22,11 @@ const Navbar = () => {
           <li>
             <Link to={'/search'} className="font-zenKaku">
               けんさく
+            </Link>
+          </li>
+          <li>
+            <Link to={'/like'} className="font-zenKaku">
+              おきにいり
             </Link>
           </li>
         </ul>

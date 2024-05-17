@@ -13,7 +13,7 @@ export type PokemonNamesAndText = {
   text?: string;
 };
 
-export type PokemonPropaties = {
+export type PokemonProperties = {
   id: number;
   thumbnail: string;
   image: string;
@@ -38,7 +38,7 @@ export type PokemonResponse = {
 };
 
 export type CardProps = {
-  pokemon: PokemonPropaties;
+  pokemon: PokemonProperties;
 };
 
 export interface PokemonDetailsResponse {

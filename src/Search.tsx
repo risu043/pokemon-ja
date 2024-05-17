@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 import {
   getAllPokemon,
   getPokemon,
   loadPokemonDetails,
 } from './utils/pokemon.ts';
-import { Names, PokemonPropaties } from './utils/type.ts';
+import { Names, PokemonProperties } from './utils/type.ts';
 import Card from './components/Card/Card.tsx';
+import './Search.css';
 
 const SerchPage = () => {
   // 全ポケモンの英名・和名
@@ -15,7 +17,7 @@ const SerchPage = () => {
   const [title, setTitle] = useState<string>('');
 
   // 検索結果
-  const [items, setItems] = useState<PokemonPropaties[]>([]);
+  const [items, setItems] = useState<PokemonProperties[]>([]);
 
   // 検索ボタンをおしてから結果が表示されるまでloading
   const [loading, setLoading] = useState(false);
@@ -42,17 +44,13 @@ const SerchPage = () => {
       'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'
     );
 
-    // let targetData = res.results.filter((pokemon) => {
-    //   if (enNames.includes(pokemon.name)) {
-    //     return pokemon;
-    //   }
-    // });
     let targetData = res.results.filter((pokemon) => {
       return enNames.some((name) => pokemon.name.includes(name));
     });
 
     const _pokemonDetailsData = await loadPokemonDetails(targetData);
     setItems(_pokemonDetailsData);
+    setTitle('');
     setLoading(false);
   };
 
@@ -86,16 +84,19 @@ const SerchPage = () => {
     <div className="container">
       <div>
         <form onSubmit={handleFormSubmit}>
-          <div className="form-inner flex justify-center mb-12">
+          <div className="flex justify-center mb-12">
             <input
               name="title"
               value={title}
-              className="form-input mr-4 p-4 border-soid border border-darkGlay focus:outline-none focus:border-violet-500"
+              className="form-input"
               placeholder="ポケモンの名前を入力"
               onChange={handleTitleChange}
             />
-            <button className="form-button mr-4 p-4 bg-blue text-white">
-              検索
+            <button
+              className={`form-button ${title === '' ? 'disabled' : 'able'}`}
+              disabled={title === ''}
+            >
+              <FaSearch />
             </button>
           </div>
         </form>

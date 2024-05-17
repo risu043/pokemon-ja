@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 // import { ReactPaginateProps } from 'react-paginate';
 import { getAllPokemon, loadPokemonDetails } from './utils/pokemon.ts';
-import { PokemonResponse, PokemonPropaties } from './utils/type.ts';
+import { PokemonResponse, PokemonProperties } from './utils/type.ts';
 import Card from './components/Card/Card.tsx';
 import './Top.css';
 
 function Top() {
   // 現在いるページのポケモンデータ
-  const [items, setItems] = useState<PokemonPropaties[]>([]);
+  const [items, setItems] = useState<PokemonProperties[]>([]);
 
   // 総ページ数
   const [pageCount, setpageCount] = useState<number>(0);
