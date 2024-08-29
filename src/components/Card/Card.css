@@ -1,15 +1,15 @@
-.modal {
+.overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 99999;
 }
 
-.modal-inner {
-  position: absolute;
+.modal {
+  position: relative;
   top: 3%;
-  right: 0;
-  left: 0;
+  /* right: 0; */
+  /* left: 0; */
   width: 92%;
   padding: 1rem;
   margin: auto;
@@ -19,4 +19,20 @@
   @media (width > 600px) {
     width: 480px;
   }
+}
+
+.name-like-wrapper {
+  align-items: center;
+  gap: 0.5rem;
+}
+.close-button {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: #ccc;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #e7e7e7;
+  width: 40px;
+  height: 40px;
 }

@@ -1,0 +1,16 @@
+.form-input {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-image: url(/public/search.svg);
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  padding-left: 40px;
+}
+.form-input:focus {
+  outline: 2px solid #bbbbbb;
+}
+.error {
+  color: #f43f5e;
+}

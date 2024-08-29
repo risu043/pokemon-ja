@@ -1,7 +1,7 @@
 import {
   PokemonResponse,
   PokemonNamesAndText,
-  PokemonPropaties,
+  PokemonProperties,
   PokemonDetailsResponse,
 } from './type.ts';
 
@@ -27,7 +27,7 @@ export const getPokemon = async (
 // ポケモンの詳細データを日本語で取得する関数
 export const loadPokemonDetails = async (
   data: { url: string }[]
-): Promise<PokemonPropaties[]> => {
+): Promise<PokemonProperties[]> => {
   // ポケモン配列から1階層目の詳細データを取得
   let _pokemonData = await Promise.all(
     data.map((pokemon) => {
@@ -112,7 +112,7 @@ export const loadPokemonDetails = async (
   );
 
   // ポケモンの日本語プロパティをまとめる
-  const pokemonPropaties: PokemonPropaties[] = _pokemonData.map(
+  const pokemonPropaties: PokemonProperties[] = _pokemonData.map(
     (pokemon, index) => {
       return {
         id: pokemon.id,

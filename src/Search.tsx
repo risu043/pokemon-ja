@@ -1,116 +1,104 @@
-import { useEffect, useState } from 'react';
-import {
-  getAllPokemon,
-  getPokemon,
-  loadPokemonDetails,
-} from './utils/pokemon.ts';
-import { Names, PokemonPropaties } from './utils/type.ts';
+import { KeyboardEventHandler, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { getAllPokemon, loadPokemonDetails } from './utils/pokemon.ts';
+import { PokemonProperties } from './utils/type.ts';
 import Card from './components/Card/Card.tsx';
+import './Search.css';
+import translateData from './utils/taranslate.json';
 
-const SerchPage = () => {
-  // 全ポケモンの英名・和名
-  const [names, setNames] = useState<Names[]>([]);
-
-  // formのinputの値
-  const [title, setTitle] = useState<string>('');
-
-  // 検索結果
-  const [items, setItems] = useState<PokemonPropaties[]>([]);
-
-  // 検索ボタンをおしてから結果が表示されるまでloading
+const SearchPage = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const initialQuery = searchParams.get('query') || '';
+  const [query, setQuery] = useState<string>(initialQuery);
+  const [lastSearchQuery, setLastSearchQuery] = useState<string>('');
+  const [items, setItems] = useState<PokemonProperties[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>('');
 
-  const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setTitle(e.target.value);
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setQuery(e.target.value);
   };
 
-  const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (query === '') {
+        navigate('/search');
+        setLastSearchQuery('');
+        setItems([]);
+        setError('ポケモンの名前を入力してください');
+        return;
+      }
+      setLoading(true);
+      navigate(`/search?query=${query}`);
 
-    if (title === '') {
-      return;
-    }
+      let enNames = translateData
+        .filter((pokemon) => pokemon.jaName.includes(query))
+        .map((pokemon) => pokemon.name);
 
-    setLoading(true);
+      console.log(enNames);
 
-    let translate = names.filter((pokemon) => pokemon.jaName.match(title));
-    let enNames = translate.map((pokemon) => pokemon.name);
-
-    const res = await getAllPokemon(
-      'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'
-    );
-
-    // let targetData = res.results.filter((pokemon) => {
-    //   if (enNames.includes(pokemon.name)) {
-    //     return pokemon;
-    //   }
-    // });
-    let targetData = res.results.filter((pokemon) => {
-      return enNames.some((name) => pokemon.name.includes(name));
-    });
-
-    const _pokemonDetailsData = await loadPokemonDetails(targetData);
-    setItems(_pokemonDetailsData);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const pokemonNames = async (): Promise<void> => {
       const res = await getAllPokemon(
-        'https://pokeapi.co/api/v2/pokemon-species?limit=10000&offset=0'
+        'https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0'
       );
-      let _pokemonNameData = await Promise.all(
-        res.results.map((pokemon) => {
-          let pokemonRecord = getPokemon(pokemon.url);
-          return pokemonRecord;
-        })
+
+      let targetData = res.results.filter((pokemon) =>
+        enNames.some((name) => pokemon.name.includes(name))
       );
-      let _pokemonNames = _pokemonNameData.map((pokemon) => {
-        let jaName = pokemon.names.find(
-          (entry) => entry.language.name === 'ja-Hrkt'
-        )!.name;
 
-        return {
-          name: pokemon.name,
-          jaName: jaName,
-        };
-      });
+      if (targetData.length === 0) {
+        setError(`「${query}」に一致するポケモンが見つかりませんでした。`);
+        setLastSearchQuery(query);
+        setItems([]);
+        setLoading(false);
+        setQuery('');
+        return;
+      }
 
-      setNames(_pokemonNames);
-    };
-    pokemonNames();
-  }, []);
+      const pokemonDetails = await loadPokemonDetails(targetData);
+      setItems(pokemonDetails);
+      setQuery('');
+      setError('');
+      setLastSearchQuery(query);
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="container">
+    <div className="container mx-auto">
       <div>
-        <form onSubmit={handleFormSubmit}>
-          <div className="form-inner flex justify-center mb-12">
+        <form>
+          <div className="flex justify-center mb-12">
             <input
-              name="title"
-              value={title}
-              className="form-input mr-4 p-4 border-soid border border-darkGlay focus:outline-none focus:border-violet-500"
+              name="query"
+              value={query}
+              className="form-input"
               placeholder="ポケモンの名前を入力"
-              onChange={handleTitleChange}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
             />
-            <button className="form-button mr-4 p-4 bg-blue text-white">
-              検索
-            </button>
           </div>
         </form>
       </div>
       {loading ? (
         <div className="loading"></div>
       ) : (
-        <div className="pokemonCardContainer container mx-auto w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-12 pb-16 px-4">
-          {items.map((pokemon, i) => {
-            return <Card key={i} pokemon={pokemon} />;
-          })}
-        </div>
+        <>
+          {items.length > 0 && (
+            <p className="text-center mb-12">「{lastSearchQuery}」の検索結果</p>
+          )}
+          {error && <p className="text-center mb-12 error">{error}</p>}
+
+          <div className="pokemonCardContainer container mx-auto w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-12 pb-16 px-4">
+            {items.map((pokemon, i) => (
+              <Card key={i} pokemon={pokemon} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
 };
 
-export default SerchPage;
+export default SearchPage;
