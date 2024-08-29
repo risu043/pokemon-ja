@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PokemonProperties } from './utils/type.ts';
 import Card from './components/Card/Card.tsx';
+import './Like.css';
 
 const LikedPokemonPage: React.FC = () => {
   // お気に入りポケモンのデータ
@@ -22,13 +23,32 @@ const LikedPokemonPage: React.FC = () => {
     setLikedPokemons(pokemons);
   }, []);
 
+  const handleResetFavorites = () => {
+    // ローカルストレージをクリア
+    localStorage.clear();
+    // likedPokemons の状態を空の配列に更新
+    setLikedPokemons([]);
+  };
+
   return (
     <>
+      {likedPokemons.length === 0 && (
+        <p className="text-center">おきにいりはまだありません</p>
+      )}
       <div className="pokemonCardContainer container mx-auto w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-12 pb-16 px-4">
         {likedPokemons.map((pokemon, i) => {
           return <Card key={i} pokemon={pokemon} />;
         })}
       </div>
+
+      {likedPokemons.length > 0 && (
+        <button
+          onClick={handleResetFavorites}
+          className="bg-blue text-white reset-button"
+        >
+          おきにいりをリセットする
+        </button>
+      )}
     </>
   );
 };

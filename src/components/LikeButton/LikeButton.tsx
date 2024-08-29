@@ -5,6 +5,8 @@ import './LikeButton.css';
 
 const LikeButton: React.FC<CardProps> = ({ pokemon }) => {
   const [liked, setLiked] = useState(false);
+  const [isLikeAnimating, setIsLikeAnimating] = useState(false);
+  const [isUnlikeAnimating, setIsUnlikeAnimating] = useState(false);
 
   useEffect(() => {
     const key = `pokemon_${pokemon.id}`;
@@ -22,9 +24,13 @@ const LikeButton: React.FC<CardProps> = ({ pokemon }) => {
       // お気に入り未ならlocalStrageにポケモンデータを保存しお気に入り登録
       localStorage.setItem(key, val);
       setLiked(true);
+      setIsLikeAnimating(true);
+      setTimeout(() => setIsLikeAnimating(false), 300);
     } else {
       // お気に入り済みならlocalStrageからポケモンデータを削除しお気に入り解除
       setLiked(false);
+      setIsUnlikeAnimating(true);
+      setTimeout(() => setIsUnlikeAnimating(false), 300);
       localStorage.removeItem(key);
     }
   };
@@ -32,7 +38,9 @@ const LikeButton: React.FC<CardProps> = ({ pokemon }) => {
   return (
     <>
       <FaHeart
-        className={liked ? 'like button' : 'unlike button'}
+        className={`button ${liked ? 'like' : 'unlike'} ${
+          isLikeAnimating ? 'like-animation' : ''
+        } ${isUnlikeAnimating ? 'unlike-animation' : ''}`}
         onClick={toggleLiked}
       />
     </>

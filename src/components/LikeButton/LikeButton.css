@@ -8,11 +8,10 @@
 
 .button {
   font-size: 1.25rem;
-  transition: 0.5s;
   margin-bottom: 0.25rem;
 }
 
-.button.like {
+.button.like-animation {
   animation: pulse 0.3s ease-in-out;
 }
 
@@ -26,4 +25,8 @@
   100% {
     transform: scale(1);
   }
+}
+
+.button.unlike-animation {
+  transition: 0.4s;
 }
